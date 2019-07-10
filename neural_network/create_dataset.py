@@ -4,8 +4,7 @@ import numpy as np
 import cv2
 
 class dataset:
-  #in python, don't define any variables here, another it doesn't not belong to the object itself and will get mutated everything another class is called
-    
+#create the dataset from all the pills here     
     def __init__(self,path):
         self.PATH=path
         self.x=[]
@@ -49,10 +48,12 @@ class dataset:
 
 def crop_image(img_array,IMG_SIZE): 
     crop_img = img_array[250:750, 700:1200] #first crop the image
-    
+   # crop_img = img_array[111:333, 233:400] #first crop the image
+    cv2.imshow('crop first',crop_img)
     #next find the contours of the image
     new_array=cv2.resize(crop_img,(IMG_SIZE,IMG_SIZE)) #resize every image before passing it in
     hsv = cv2.cvtColor(new_array, cv2.COLOR_BGR2HSV) #convert image to hsv
+    cv2.imshow('new crop',hsv)
         
     return hsv
 
