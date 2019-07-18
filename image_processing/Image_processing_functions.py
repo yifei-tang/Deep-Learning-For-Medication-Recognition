@@ -2,10 +2,12 @@ import os
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+import collections
 from image_processing.image_processing import my_colours_hsv, define_colours_hsv
 from collections import Counter
 from skimage.color import rgb2lab, deltaE_cie76
 from sklearn.cluster import KMeans
+
 
 def process_image(img_array,IMG_SIZE,pill_index,number_of_colours): 
   crop_img = img_array[250:750, 700:1200] #first crop the image
@@ -55,15 +57,22 @@ def process_image(img_array,IMG_SIZE,pill_index,number_of_colours):
   #colours=get_colours(rgb_bright,2,True)
   
   #get HSV colours in a list
-  colours=get_colours_hsv(final_crop,number_of_colours,True)
+  colours_hsv=get_colours_hsv(final_crop,number_of_colours,True)
+
+  return colours_hsv
+
+#make this function query the database instead
+def convert_hsv_to_string(colours_hsv,myDB):
   # define colour ranges
   colour_definitions=define_colours_hsv()
   
   #this class will give you the colour ranges
-  pillColour=my_colours_hsv(colours,3,colour_definitions)
-  #pillColour=my_colours(colours,1,colour_definitions.singlePills,colour_definitions.blisterPills)
+  pillColour=my_colours_hsv(3,myDB)
+  pillColour.identifyColour(colours_hsv,False)
+  #another function to get the pill from the hsv values
+
+  #this will print the colours out as words
   print('hsv colours',pillColour.image_colour)
-  temp=show_RGB_from_HSV(final_crop)
   #return the class of your prediction
   return pillColour
 

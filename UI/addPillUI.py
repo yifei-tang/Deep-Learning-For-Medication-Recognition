@@ -8,12 +8,15 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from database.setup_database import my_database
+from image_processing.Image_processing_functions import process_image, convert_hsv_to_string
+from image_processing.image_processing import my_colours_hsv
 import cv2
 
 
 class Dialog(QtWidgets.QDialog):
-    def __init__(self,parent,myDB):
+    def __init__(self,parent,myDB,image):
         super(Dialog,self).__init__(parent)
+        self.image=image
         self.myDB=myDB
         self.setObjectName("Dialog")
         self.resize(597, 389)
@@ -76,13 +79,16 @@ class Dialog(QtWidgets.QDialog):
 
         #search database here, look for the pill
         popUp=QtWidgets.QMessageBox()
-
         #if not found, then you must add it
         if not self.myDB.foundInDB(self.pillName.text()):
-            #add here:
-            hue=#get the hues here with image processing
+            #extract HSV values with image processing
+            colours_hsv=process_image(self.image,150,3,3)
+            pillColour=my_colours_hsv(3,self.myDB)
+            pillColour.identifyColour(colours_hsv,True)
+            hueDB=pillColour.hue_array
+
             try:
-                self.myDB.insertDB(self.pillName.text(),self.pillDosage.text(),self.pillColour.text(),hue,self.pillDescription.text(),self.pillCountry.toPlainText())
+                self.myDB.insertDB(self.pillName.text(),self.pillDosage.text(),self.pillColour.text(),int(hueDB[0]),int(hueDB[1]),int(hueDB[2]),self.pillDescription.toPlainText(),self.pillCountry.text())
                 popUp.setText('Successfully Added')
                 popUp.exec_()
                 self.close()

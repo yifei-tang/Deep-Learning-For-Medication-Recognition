@@ -9,10 +9,11 @@ import pickle
 from neural_network.working_model import load_pretrained_model, evaluate_model
 from neural_network.create_dataset import crop_image, np_convert
 from image_processing.image_processing import my_colours_hsv, accuracy
-from image_processing.Image_processing_functions import process_image, show_RGB_from_HSV, crop_rect, RGB2HEX, get_colours_hsv, HSV_REGULARIZED
+from image_processing.Image_processing_functions import process_image, convert_hsv_to_string, show_RGB_from_HSV, crop_rect, RGB2HEX, get_colours_hsv, HSV_REGULARIZED
 from database.setup_database import my_database
 from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.addPillUI import Dialog
+from UI.classifyUI import Ui_Dialog
 
 class Window(QtWidgets.QMainWindow):
     def __init__(self,myDatabase,parent=None):
@@ -125,7 +126,7 @@ class Widget(QtWidgets.QWidget):
         #mydata=dataEntered()
         # popUp=QtWidgets.QDialog()
 
-        ui=Dialog(self,self.myDatabase)
+        ui=Dialog(self,self.myDatabase,self.image)
         ui.show()
         ui.exec_()
         # ui.setupUi(popUp)
@@ -135,21 +136,39 @@ class Widget(QtWidgets.QWidget):
         self.startTimer()
 
     def classifyClick(self):
-        popUp=QtWidgets.QMessageBox()
+        
 
-        #predict the pill here
-        pillColour=process_image(self.image,150,3,3) #select an image
-        string1='Pill classified as '
-        string2=''
-        for colour in pillColour.image_colour:
-            if pillColour.image_colour.index(colour)==0:
-                string2= string2+colour
-            else:
-                string2=string2+', '+colour
+        
+        try:
+            #predict the pill here
+            colour_hsv=process_image(self.image,150,3,3) #select an image
+            pillColour=convert_hsv_to_string(colour_hsv,self.myDatabase)
+            #get the actual name of the pill from database using pillColour.hue_array
+            pillData=self.myDatabase.getMatchingPillDB(pillColour.hue_array)
+            print(pillData)
+            ui=Ui_Dialog(self,pillData[0])
+            ui.show()
+            ui.exec_()
+        except:
+            popUp=QtWidgets.QMessageBox()
+            popUp.setText("Did Not Classify")
+            popUp.exec_()
+        # string1='Pill classified as '
+        # try:
+        #     string2=pillData[0][0]
+        #     string=string1+string2
 
-        string=string1+string2
-        popUp.setText(string)
-        popUp.exec_()
+        # except:
+        #     string='Did not correctly classify'
+        #     print('did not classify')
+        # # for colour in pillColour.image_colour:
+        # #     if pillColour.image_colour.index(colour)==0:
+        # #         string2= string2+colour
+        # #     else:
+        # #         string2=string2+', '+colour
+
+        # popUp.setText(string)
+        # popUp.exec_()
         self.startTimer()
 
     def removeClick(self):
@@ -165,7 +184,7 @@ class Widget(QtWidgets.QWidget):
         # if timer is stopped, we start it up again
         if not self.timer.isActive():
             self.timer.start(1) #20 milliseconds
-            self.cap = cv2.VideoCapture(0)
+            self.cap = cv2.VideoCapture(2)
 
     def pauseTimer(self):
         self.timer.stop()

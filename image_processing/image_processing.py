@@ -27,6 +27,7 @@ class define_colours_hsv:
       self.colour_dictionary_hue.update({HSV_colours[0]:name_of_colour}) #adds this key value pair to dicitonary
     else:
       print('Pill Already added')
+
   def deletePill(self,pill):
     try:
       self.all_pills_hsv.remove(pill)
@@ -40,17 +41,17 @@ class define_colours_hsv:
                                 35:'Light Orange',
                                 340:'Pink'}
     
-    #this is only used for testing accuracy
+    #this is only used for testing accuracy, discard later
     self.colour_array=['Light Orange','Dark Orange','White','Brown','Brown and Orange','Pink']
       
 #classify by HSV image:
 class my_colours_hsv:
   
-  def identifyColour(self,hsv_colours,colour_definition):
+  def identifyColour(self,hsv_colours,isNewPill):
     #print('color:',image_colors)
     #print(range(len(Pills)))
-    greyCount=0
     found=False
+    greyCount=0
     for j in range(self.number_of_colors): #check each of the colours we found on the screen compare each
       extracted_colour = hsv_colours[j]
       extracted_h=extracted_colour[0]
@@ -60,34 +61,48 @@ class my_colours_hsv:
     #If saturation is under 25, it is the gray colour around the pill, discard colour, continue
       if extracted_s<=25:
         greyCount+=1
+        self.hue_array[j]=0
         continue #continue moves on to the next colour we are extracting
         
     #If the V is under 20 it is a darker colour, classify as Dark Brown
       elif extracted_v<=29:
         print('Dark Colour')
         self.addColour('Brown')
-        continue        
-      
-      #now loop through the H's to see if they match
-      for i in colour_definition.colour_dictionary_hue: #loop through all the already defined h's in the dictionary
-        selected_hue = i        
-        # H within 5 of 23, classify as orange
-        # H within 5 of 35, classify as light orange
-        # H within 5 of 340 classify as Pink
-        diff=selected_hue-extracted_h
+        self.hue_array[j]=1000 #brown set hue to arbitarily high value
+        continue      
 
-        if abs(diff) < self.threshold:
-          #add the string that is in colour dictionary 
-          self.addColour(colour_definition.colour_dictionary_hue[i])
-          found=True
+      found=False
+      #loop through the hues in database instead, discarding the 0 and 1000s
+      hue_list=self.database.getListHueDB()
+      for hue in hue_list:
+        for hue_value in hue:
+          selected_hue = hue_value       
+          # H within 5 of 23, classify as orange
+          # H within 5 of 35, classify as light orange
+          # H within 5 of 340 classify as Pink
+          diff=selected_hue-extracted_h
+
+          if abs(diff) < self.threshold and (selected_hue!=0 or selected_hue!=1000):
+            #insert into array that hue
+            self.hue_array[j]=selected_hue
+            found=True
+            break
+        if found==True:
           break
+      if not found:
+        if isNewPill:
+          self.hue_array[j]=extracted_h
+        else:
+          self.hue_array[j]=0
           
     #if empty, we have not found a colour or discarded 
     if not self.image_colour and greyCount==self.number_of_colors:
       self.image_colour.append('White')
+      #hue array is all 0s
         
     return found
   
+  #adds to this pill's array of detected colours
   def addColour(self,colour_to_add):
     #if the colour is not already in the image_colour array, append colour to add
     if colour_to_add not in self.image_colour:
@@ -95,15 +110,15 @@ class my_colours_hsv:
           
         
   #hsv_colours
-  def __init__(self,hsv_colours,num_colours,definitions):
+  def __init__(self,num_colours,myDB):
 #     self.blister_bounds=self.colours_blister[i]
 #     self.single_bounds=self.colours_single[i]
+    self.database=myDB
     self.threshold=10
     self.image_colour=[] #list of all the colours in the photographed image
     self.number_of_colors=num_colours
-    self.index=100000
-    self.within_bounds=self.identifyColour(hsv_colours,definitions)
-         
+    self.hue_array=[None]*self.number_of_colors #3 elements to fill this array with
+    self.index=100000         
   #define the upper and lower bounds for each color
   #returns true
     
