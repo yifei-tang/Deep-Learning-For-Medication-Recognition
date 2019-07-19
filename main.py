@@ -6,8 +6,8 @@ import sys
 import numpy as np
 import random
 import pickle
-from neural_network.working_model import load_pretrained_model, evaluate_model
-from neural_network.create_dataset import crop_image, np_convert
+#from neural_network.working_model import load_pretrained_model, evaluate_model
+#from neural_network.create_dataset import crop_image, np_convert
 from image_processing.image_processing import my_colours_hsv, accuracy
 from image_processing.Image_processing_functions import process_image, convert_hsv_to_string, show_RGB_from_HSV, crop_rect, RGB2HEX, get_colours_hsv, HSV_REGULARIZED
 from database.setup_database import my_database
@@ -184,7 +184,7 @@ class Widget(QtWidgets.QWidget):
         # if timer is stopped, we start it up again
         if not self.timer.isActive():
             self.timer.start(1) #20 milliseconds
-            self.cap = cv2.VideoCapture(2)
+            self.cap = cv2.VideoCapture(-1)
 
     def pauseTimer(self):
         self.timer.stop()
