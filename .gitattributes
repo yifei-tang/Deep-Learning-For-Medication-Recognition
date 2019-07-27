@@ -1,3 +1,4 @@
 neural_network/train_x.pickle filter=lfs diff=lfs merge=lfs -text
 neural_network/training_1/cp.ckpt.data-00001-of-00002 filter=lfs diff=lfs merge=lfs -text
 neural_network/training_1_old/cp.ckpt.data-00001-of-00002 filter=lfs diff=lfs merge=lfs -text
+neural_network filter=lfs diff=lfs merge=lfs -text
