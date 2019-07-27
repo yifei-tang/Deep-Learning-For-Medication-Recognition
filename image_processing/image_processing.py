@@ -89,6 +89,7 @@ class my_colours_hsv:
             break
         if found==True:
           break
+          
       if not found:
         if isNewPill:
           self.hue_array[j]=extracted_h
