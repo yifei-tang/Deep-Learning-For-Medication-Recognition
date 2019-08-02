@@ -22,42 +22,55 @@ class Dialog(QtWidgets.QDialog):
         self.resize(597, 389)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
-        self.enterDosage = QtWidgets.QLabel(self)
-        self.enterDosage.setObjectName("enterDosage")
-        self.gridLayout.addWidget(self.enterDosage, 2, 0, 1, 1)
-        self.enterUse = QtWidgets.QLabel(self)
-        self.enterUse.setObjectName("enterUse")
-        self.gridLayout.addWidget(self.enterUse, 16, 0, 1, 1)
-        # self.okay = QtWidgets.QDialogButtonBox(Dialog)
-        # self.okay.setOrientation(QtCore.Qt.Vertical)
-        # self.okay.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        # self.okay.setObjectName("okay")
-       # self.gridLayout.addWidget(self.okay, 19, 0, 1, 1)
-        self.enterColour = QtWidgets.QLabel(self)
-        self.enterColour.setObjectName("enterColour")
-        self.gridLayout.addWidget(self.enterColour, 4, 0, 1, 1)
-        self.pillDosage = QtWidgets.QLineEdit(self)
-        self.pillDosage.setObjectName("pillDosage")
-        self.gridLayout.addWidget(self.pillDosage, 3, 0, 1, 1)
-        self.pillDescription = QtWidgets.QTextEdit(self)
-        self.pillDescription.setObjectName("pillDescription")
-        self.gridLayout.addWidget(self.pillDescription, 17, 0, 1, 1)
-        self.pillColour = QtWidgets.QLineEdit(self)
-        self.pillColour.setObjectName("pillColour")
-        self.gridLayout.addWidget(self.pillColour, 5, 0, 1, 1)
+
+
+        #Enter Pill Name
+        self.enterPillName = QtWidgets.QLabel(self)
+        self.enterPillName.setObjectName("enterPillName")
+        self.gridLayout.addWidget(self.enterPillName, 0, 0, 1, 1)
+
         self.pillName = QtWidgets.QLineEdit(self)
         self.pillName.setText("")
         self.pillName.setObjectName("pillName")
         self.gridLayout.addWidget(self.pillName, 1, 0, 1, 1)
-        self.enterPillName = QtWidgets.QLabel(self)
-        self.enterPillName.setObjectName("enterPillName")
-        self.gridLayout.addWidget(self.enterPillName, 0, 0, 1, 1)
+        
+
+        #Enter Dosage
+        self.enterDosage = QtWidgets.QLabel(self)
+        self.enterDosage.setObjectName("enterDosage")
+        self.gridLayout.addWidget(self.enterDosage, 2, 0, 1, 1)
+
+        self.pillDosage = QtWidgets.QLineEdit(self)
+        self.pillDosage.setObjectName("pillDosage")
+        self.gridLayout.addWidget(self.pillDosage, 3, 0, 1, 1)
+        
+        #Enter Colour
+        self.enterColour = QtWidgets.QLabel(self)
+        self.enterColour.setObjectName("enterColour")
+        self.gridLayout.addWidget(self.enterColour, 4, 0, 1, 1)
+
+        self.pillColour = QtWidgets.QLineEdit(self)
+        self.pillColour.setObjectName("pillColour")
+        self.gridLayout.addWidget(self.pillColour, 5, 0, 1, 1)
+
+        #Enter Manufacturer
         self.enterManufacturer = QtWidgets.QLabel(self)
         self.enterManufacturer.setObjectName("enterManufacturer")
         self.gridLayout.addWidget(self.enterManufacturer, 7, 0, 1, 1)
         self.pillCountry = QtWidgets.QLineEdit(self)
         self.pillCountry.setObjectName("pillCountry")
         self.gridLayout.addWidget(self.pillCountry, 8, 0, 1, 1)
+
+        #Enter Description
+        self.enterUse = QtWidgets.QLabel(self)
+        self.enterUse.setObjectName("enterUse")
+        self.gridLayout.addWidget(self.enterUse, 16, 0, 1, 1)
+        
+        self.pillDescription = QtWidgets.QTextEdit(self)
+        self.pillDescription.setObjectName("pillDescription")
+        self.gridLayout.addWidget(self.pillDescription, 17, 0, 1, 1)
+
+        #Add Complete
         self.addComplete = QtWidgets.QPushButton(self)
         self.addComplete.setObjectName("addComplete")
         self.addComplete.clicked.connect(self.printText)

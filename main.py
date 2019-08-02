@@ -21,9 +21,9 @@ class Window(QtWidgets.QMainWindow):
         self.myWidget=Widget(self,myDatabase)
         self.setGeometry(50,50,798,800)
         self.setCentralWidget(self.myWidget)
-        self.setWindowTitle('PillPicker')
+        self.setWindowTitle('PillSafe')
         self.setWindowIcon(QtGui.QIcon('pillIcon.png'))
-
+        
 
 
 class Widget(QtWidgets.QWidget):
@@ -31,6 +31,7 @@ class Widget(QtWidgets.QWidget):
         super(Widget,self).__init__(parent)
         self.myDatabase=myDatabase
         self.setObjectName("MainWindow")
+        
         self.resize(789, 688)
         #self.centralwidget = QtWidgets.QWidget()
         #self.centralwidget.setObjectName("centralwidget")
@@ -64,9 +65,6 @@ class Widget(QtWidgets.QWidget):
 
         #pixmap on the label
         self.label = QtWidgets.QLabel(self)
-        #pixmap = QtGui.QPixmap('pillIcon.png')
-        #self.label.setPixmap(pixmap)
-
         self.label.setObjectName("label")
         self.timer = QtCore.QTimer()
 
@@ -77,24 +75,8 @@ class Widget(QtWidgets.QWidget):
 
         self.verticalLayout_2.addWidget(self.label)
         self.verticalLayout.addLayout(self.verticalLayout_2)
-        #self.setCentralWidget(self.centralwidget)
-
-        # self.menubar = QtWidgets.QMenuBar(MainWindow)
-        # self.menubar.setGeometry(QtCore.QRect(0, 0, 789, 22))
-        # self.menubar.setObjectName("menubar")
-        # self.menuFile = QtWidgets.QMenu(self.menubar)
-        # self.menuFile.setObjectName("menuFile")
-        # MainWindow.setMenuBar(self.menubar)
-        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        # self.statusbar.setObjectName("statusbar")
-        # MainWindow.setStatusBar(self.statusbar)
-        # self.actionSave = QtWidgets.QAction(MainWindow)
-        # self.actionSave.setObjectName("actionSave")
-        # self.menuFile.addAction(self.actionSave)
-        # self.menubar.addAction(self.menuFile.menuAction())
-
+     
         self.retranslateUi()
-        #QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def viewCam(self):
         
@@ -137,8 +119,6 @@ class Widget(QtWidgets.QWidget):
 
     def classifyClick(self):
         
-
-        
         try:
             #predict the pill here
             colour_hsv=process_image(self.image,150,3,3) #select an image
@@ -153,28 +133,11 @@ class Widget(QtWidgets.QWidget):
             popUp=QtWidgets.QMessageBox()
             popUp.setText("Did Not Classify")
             popUp.exec_()
-        # string1='Pill classified as '
-        # try:
-        #     string2=pillData[0][0]
-        #     string=string1+string2
-
-        # except:
-        #     string='Did not correctly classify'
-        #     print('did not classify')
-        # # for colour in pillColour.image_colour:
-        # #     if pillColour.image_colour.index(colour)==0:
-        # #         string2= string2+colour
-        # #     else:
-        # #         string2=string2+', '+colour
-
-        # popUp.setText(string)
-        # popUp.exec_()
         self.startTimer()
 
     def removeClick(self):
-        popUp=QtWidgets.QMessageBox()
-        #predict the pill here
 
+        popUp=QtWidgets.QMessageBox()
         popUp.setText('Removed Pill')
         popUp.exec_()
         self.startTimer()
@@ -183,8 +146,8 @@ class Widget(QtWidgets.QWidget):
     def startTimer(self):
         # if timer is stopped, we start it up again
         if not self.timer.isActive():
-            self.timer.start(1) #20 milliseconds
-            self.cap = cv2.VideoCapture(-1)
+            self.timer.start(10) #10 milliseconds
+            self.cap = cv2.VideoCapture(-1) #had to manually adjust this to get the right camera from laptop
 
     def pauseTimer(self):
         self.timer.stop()
@@ -203,16 +166,40 @@ class dataEntered:
 if __name__ == "__main__":
     import sys
     myDB=my_database()
+    stylesheet= """
+            QPushButton{
+                position: absolute;
+                color: #555;
+                background: #fff;
+                font-family: Lato;
+                font-size: 30px;
+                font-weight: 300;
+            }
+            QPushButton#addComplete{
+                font-size:20px;
+                font-family: Arial;
+            }
+            QDialog{
+                background: #abdfff;
+            }
+            QMainWindow{
+                background: #abdfff;
+            }
+            QTextEdit{
+                background-color: none;
+            }
+            QLineEdit{
+                background-color: none;
+            }
+            """
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyleSheet(stylesheet)
     GUI=Window(myDB)
     GUI.show()
-    # MainWindow = QtWidgets.QMainWindow()
-    # ui = Ui_MainWindow()
-    # ui.setupUi(MainWindow)
-    # MainWindow.show()
     sys.exit(app.exec_())
 
 
+# Functioning Code without GUI with Neural Net and Image Processing
 
 # colour_array=['Red','Orange','White','Brown','Red and Yellow','Dark Red']
 # model=load_pretrained_model()
