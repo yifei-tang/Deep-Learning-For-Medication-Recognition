@@ -104,5 +104,12 @@ class my_database:
         except:
             print('Table Cleared Already')
         
+    def getListNamesDB(self):
+        sqlFormula="SELECT NAME FROM Pills"
+        self.mycursor.execute(sqlFormula)
+        result=self.mycursor.fetchall()
+        print(result)
+        return result
+
 if __name__ == "__main__":
     DB=my_database()

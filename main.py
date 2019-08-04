@@ -14,6 +14,7 @@ from database.setup_database import my_database
 from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.addPillUI import Dialog
 from UI.classifyUI import Ui_Dialog
+from UI.deletePillUI import delete_dialog
 
 class Window(QtWidgets.QMainWindow):
     def __init__(self,myDatabase,parent=None):
@@ -136,10 +137,14 @@ class Widget(QtWidgets.QWidget):
         self.startTimer()
 
     def removeClick(self):
+        
+        delete_ui=delete_dialog(self,self.myDatabase)
+        delete_ui.show()
+        delete_ui.exec_()
 
-        popUp=QtWidgets.QMessageBox()
-        popUp.setText('Removed Pill')
-        popUp.exec_()
+        # popUp=QtWidgets.QMessageBox()
+        # popUp.setText('Removed Pill')
+        # popUp.exec_()
         self.startTimer()
 
 
