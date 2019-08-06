@@ -80,11 +80,7 @@ class Widget(QtWidgets.QWidget):
         self.retranslateUi()
 
     def viewCam(self):
-        
-        #higher resolution
-        self.cap.set(3,1920)
-        self.cap.set(4,1080)
-
+        #lag occurs here if you resize frame
         #read image in bgr format
         ret, self.image = self.cap.read()
         # convert image to RGB format
@@ -152,7 +148,10 @@ class Widget(QtWidgets.QWidget):
         # if timer is stopped, we start it up again
         if not self.timer.isActive():
             self.timer.start(10) #10 milliseconds
-            self.cap = cv2.VideoCapture(-1) #had to manually adjust this to get the right camera from laptop
+            self.cap = cv2.VideoCapture(-1) #had to manually adjust this to get the right camera from laptop (I used 2)
+            #higher resolution
+            self.cap.set(3,1920) 
+            self.cap.set(4,1080)
 
     def pauseTimer(self):
         self.timer.stop()
