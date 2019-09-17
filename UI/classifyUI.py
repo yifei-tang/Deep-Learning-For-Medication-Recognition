@@ -21,8 +21,13 @@ class Ui_Dialog(QtWidgets.QDialog):
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.listWidget = QtWidgets.QListWidget(self)
         self.listWidget.setObjectName("listWidget")
+        self.listWidget.setAlternatingRowColors(True)
+        
+        pillCharLabels= ['Pill Name','Colour','Dosage','H1','H2','H3','Usage','Manufacturer']
         for i in pillCharacteristics:
-            self.listWidget.addItem(str(i))
+            ind=pillCharacteristics.index(i)
+            if ind != 3 and ind!=4 and ind!=5:
+                self.listWidget.addItem(str(pillCharLabels[ind]+': '+i))
         self.gridLayout.addWidget(self.listWidget, 1, 0, 1, 1)
 
         self.retranslateUi(self)
